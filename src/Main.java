@@ -2,7 +2,7 @@ import model.Epic;
 import model.Subtask;
 import model.Task;
 import service.TaskManager;
-import util.Status;
+import model.enums.Status;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,6 @@
 package model;
 
-import util.Status;
+import model.enums.Status;
 
 import java.util.Objects;
 
