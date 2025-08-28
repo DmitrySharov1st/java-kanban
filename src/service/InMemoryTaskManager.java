@@ -42,7 +42,6 @@ public class InMemoryTaskManager implements TaskManager {
     public Task getTaskById(int id) {
         Task task = tasks.get(id);
         if (task != null) {
-            //historyManager.add(task);
             historyManager.add(new Task(task.getTitle(), task.getDescription(), task.getId(), task.getStatus()));
         }
         return tasks.get(id);
@@ -82,7 +81,6 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic getEpicById(int id) {
         Epic epic = epics.get(id);
         if (epic != null) {
-            //historyManager.add(epic);
             historyManager.add(new Task(epic.getTitle(), epic.getDescription(), epic.getId(), epic.getStatus()));
         }
         return epics.get(id);
@@ -120,7 +118,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask createSubtask(Subtask subtask) {
-       // subtask.setId(generateId());
         if (subtask.getId() <= 0) {
             subtask.setId(generateId());
         }
@@ -143,8 +140,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Subtask getSubtaskById(int id) {
         Subtask subtask = subtasks.get(id);
         if (subtask != null) {
-           // historyManager.add(subtask);
-            historyManager.add(new Task(subtask.getTitle(), subtask.getDescription(), subtask.getId(), subtask.getStatus()));
+           historyManager.add(new Task(subtask.getTitle(), subtask.getDescription(), subtask.getId(), subtask.getStatus()));
         }
         return subtasks.get(id);
     }
