@@ -1,15 +1,18 @@
 import model.Epic;
 import model.Subtask;
 import model.Task;
+//import service.InMemoryTaskManager;
+import service.Managers;
 import service.TaskManager;
 import model.enums.Status;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        //TaskManager taskManager = new InMemoryTaskManager();
+        TaskManager taskManager = Managers.getDefault();
 
         System.out.println("Создание задач:");
 
@@ -40,7 +43,8 @@ public class Main {
         Epic epic2 = new Epic("Эпик 2", "Описание эпика 2");
         taskManager.createEpic(epic2);
 
-        Subtask subtask3 = new Subtask("Подзадача 3 эпика 2", "Описание подзадачи 3", Status.NEW, epic2.getId());
+        Subtask subtask3 = new Subtask("Подзадача 3 эпика 2", "Описание подзадачи 3",
+                Status.NEW, epic2.getId());
         taskManager.createSubtask(subtask3);
 
         System.out.println("\nСоздан эпик 2: " + epic2);
@@ -71,8 +75,10 @@ public class Main {
         System.out.println("Обновлена подзадача 2: " + taskManager.getSubtaskById(subtask2.getId()));
         System.out.println("Эпик 1 после изменений: " + taskManager.getEpicById(epic1.getId()));
 
+        task1.setDescription("Более Новое описание задачи 1");
+
         System.out.println("\nПолучение подзадач эпика:");
-        ArrayList<Subtask> epic1Subtasks = taskManager.getSubtasksByEpicId(epic1.getId());
+        List<Subtask> epic1Subtasks = taskManager.getSubtasksByEpicId(epic1.getId());
         System.out.println("Подзадачи эпика 1: " + epic1Subtasks);
 
         System.out.println("\nУдаление задач:");
@@ -85,5 +91,10 @@ public class Main {
         System.out.println("Все эпики: " + taskManager.getAllEpics());
         System.out.println("Все подзадачи: " + taskManager.getAllSubtasks());
 
+        System.out.println("\nИстория просмотров:");
+        List<Task> history = taskManager.getHistory();
+        for (Task task : history) {
+            System.out.println(task);
+        }
     }
 }
