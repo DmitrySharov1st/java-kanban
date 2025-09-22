@@ -11,7 +11,7 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        //TaskManager taskManager = new InMemoryTaskManager();
+
         TaskManager taskManager = Managers.getDefault();
 
         System.out.println("Создание задач:");
@@ -91,10 +91,83 @@ public class Main {
         System.out.println("Все эпики: " + taskManager.getAllEpics());
         System.out.println("Все подзадачи: " + taskManager.getAllSubtasks());
 
+        printHistory(taskManager);
+
+        System.out.println("\nОчистка всех задач в текущей серии проверок");
+        taskManager.deleteAllEpics();
+        taskManager.deleteAllTasks();
+
+
+        System.out.println("Создание новой серии задач:");
+
+        Task task11 = new Task("Задача 11", "Описание задачи 11", Status.NEW);
+        Task task21 = new Task("Задача 21", "Описание задачи 21", Status.NEW);
+
+        taskManager.createTask(task11);
+        taskManager.createTask(task21);
+
+        System.out.println("Создана задача 11: " + task11);
+        System.out.println("Создана задача 21: " + task21);
+
+        Epic epic11 = new Epic("Эпик 11", "Описание эпика 11");
+        taskManager.createEpic(epic11);
+
+        Subtask subtask11 = new Subtask("Подзадача 11 эпика 11", "Описание подзадачи 11",
+                Status.NEW, epic11.getId());
+        Subtask subtask21 = new Subtask("Подзадача 21 эпика 11", "Описание подзадачи 21",
+                Status.NEW, epic11.getId());
+        Subtask subtask31 = new Subtask("Подзадача 31 эпика 11", "Описание подзадачи 31",
+                Status.NEW, epic11.getId());
+
+        taskManager.createSubtask(subtask11);
+        taskManager.createSubtask(subtask21);
+        taskManager.createSubtask(subtask31);
+
+        System.out.println("\nСоздан эпик 11: " + epic11);
+        System.out.println("Создана подзадача 11: " + subtask11);
+        System.out.println("Создана подзадача 21: " + subtask21);
+        System.out.println("Создана подзадача 31: " + subtask31);
+
+        Epic epic21 = new Epic("Эпик 21", "Описание эпика 21");
+        taskManager.createEpic(epic21);
+
+        System.out.println("\nСоздан эпик 21: " + epic21);
+
+        System.out.println("\nВывод всех задач:");
+        System.out.println("Все задачи: " + taskManager.getAllTasks());
+        System.out.println("Все эпики: " + taskManager.getAllEpics());
+        System.out.println("Все подзадачи: " + taskManager.getAllSubtasks());
+
+        System.out.println("\nЗапрос задач:");
+        System.out.println("Запрос задачи 21: " + taskManager.getTaskById(task21.getId()));
+        System.out.println("Запрос задачи 11: " + taskManager.getTaskById(task11.getId()));
+        System.out.println("Запрос подзадачи 21: " + taskManager.getSubtaskById(subtask21.getId()));
+        System.out.println("Запрос подзадачи 31: " + taskManager.getSubtaskById(subtask31.getId()));
+        System.out.println("Запрос эпика 11: " + taskManager.getEpicById(epic11.getId()));
+        System.out.println("Запрос повторный подзадачи 21: " + taskManager.getSubtaskById(subtask21.getId()));
+        System.out.println("Запрос повторный задачи 11: " + taskManager.getTaskById(task11.getId()));
+        System.out.println("Запрос эпика 21: " + taskManager.getEpicById(epic21.getId()));
+        System.out.println("Запрос повторный эпика 11: " + taskManager.getEpicById(epic11.getId()));
+
+        printHistory(taskManager);
+
+        System.out.println("\nУдаление задачи 11:");
+        taskManager.deleteTaskById(task11.getId());
+
+        printHistory(taskManager);
+
+        System.out.println("\nУдаление эпика с подзадачами 11:");
+        taskManager.deleteEpicById(epic11.getId());
+
+        printHistory(taskManager);
+    }
+
+    private static void printHistory(TaskManager taskManager) {
         System.out.println("\nИстория просмотров:");
         List<Task> history = taskManager.getHistory();
         for (Task task : history) {
             System.out.println(task);
         }
+
     }
 }
