@@ -228,7 +228,8 @@ class TaskManagerTest {
 
     }
 
-    // Убедитесь, что задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных.
+    //В истории должен оставаться только последний просмотр (и он должен содержать snapshot состояния
+    //на момент просмотра)
     @Test
     void testHistoryManagerPreservesTaskData() {
 
@@ -250,27 +251,13 @@ class TaskManagerTest {
 
         assertFalse(history.isEmpty(), "История не должна быть пустой после get-запросов");
 
-        assertEquals(2, history.size(), "История должна содержать две записи после двух вызовов getTaskById");
+        assertEquals(1, history.size(), "История должна содержать только последний просмотр для данного id");
 
-        Task firstInHistory = history.get(0);
-        Task lastInHistory = history.get(1);
-
-        assertEquals(createdTask.getId(), firstInHistory.getId(), "ID задач в истории должен совпадать");
-        assertEquals(createdTask.getId(), lastInHistory.getId(), "ID задач в истории должен совпадать");
-
-        assertEquals("Задача для истории", firstInHistory.getTitle(),
-                "Заголовок в истории должен соответствовать состоянию на момент добавления");
-        assertEquals("Описание задачи для истории", firstInHistory.getDescription(),
-                "Описание в истории должно соответствовать состоянию на момент добавления");
-        assertEquals(Status.NEW, firstInHistory.getStatus(),
-                "Статус в истории должен соответствовать состоянию на момент добавления");
-
-        assertEquals("Обновленная задача", lastInHistory.getTitle(),
-                "Заголовок в истории должен соответствовать состоянию на момент добавления");
-        assertEquals("Обновленное описание", lastInHistory.getDescription(),
-                "Описание в истории должно соответствовать состоянию на момент добавления");
-        assertEquals(Status.IN_PROGRESS, lastInHistory.getStatus(),
-                "Статус в истории должен соответствовать состоянию на момент добавления");
+        Task onlyInHistory = history.get(0);
+        assertEquals(createdTask.getId(), onlyInHistory.getId());
+        assertEquals("Обновленная задача", onlyInHistory.getTitle());
+        assertEquals("Обновленное описание", onlyInHistory.getDescription());
+        assertEquals(Status.IN_PROGRESS, onlyInHistory.getStatus());
 
     }
 }

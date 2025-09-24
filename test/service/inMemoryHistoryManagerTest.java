@@ -24,9 +24,10 @@ public class inMemoryHistoryManagerTest {
         historyManager = Managers.getDefaultHistory();
     }
 
-    //проверка, что в историю можно записать не более 10 записей
+    //проверка, что запись истории более не ограничена 10-ю задачами и что дубликаты при просмотре не появляются
     @Test
-    void testHistoryManagerStoresNoMoreThan10Records() {
+    void testHistoryManagerStoresAllRecordsAndRemovesDuplicates() {
+        // добавляем 12 уникальных задач
         for (int taskId = 1; taskId <= 12; taskId++) {
             Task task = new Task(
                     String.format("Задача %d", taskId),
@@ -38,22 +39,25 @@ public class inMemoryHistoryManagerTest {
         }
 
         List<Task> history = historyManager.getHistory();
+        assertEquals(12, history.size(), "История должна содержать все 12 записей (без лимита)");
 
-        assertEquals(10, history.size(), "История должна содержать не более 10 записей");
+        Task duplicate = new Task("Задача 5 (новая)", "Обновленное описание", Status.NEW);
+        duplicate.setId(5);
+        historyManager.add(duplicate);
 
-        for (int historyIndex = 0; historyIndex < 10; historyIndex++) {
-            Task taskInHistory = history.get(historyIndex);
-            int expectedId = historyIndex + 3;
-            assertEquals(
-                    expectedId,
-                    taskInHistory.getId(),
-                    String.format("Неверный ID задачи в истории на позиции %d", historyIndex)
-            );
-            assertEquals(
-                    String.format("Задача %d", expectedId),
-                    taskInHistory.getTitle(),
-                    String.format("Неверный заголовок задачи в истории на позиции %d", historyIndex)
-            );
+        List<Task> historyAfterDup = historyManager.getHistory();
+        assertEquals(12, historyAfterDup.size(),
+                "После повторного просмотра не должно появляться дубликатов, а только перемещение");
+
+        assertEquals(5, historyAfterDup.get(historyAfterDup.size() - 1).getId());
+        // убедимся, что id=5 встречается ровно 1 раз
+
+        int count = 0;
+        for(Task listElement : historyAfterDup) {
+            if(listElement.getId() == 5) {
+                count++;
+            }
         }
+        assertEquals(1, count, "После повторного просмотра не должно появляться дубликатов");
     }
 }
