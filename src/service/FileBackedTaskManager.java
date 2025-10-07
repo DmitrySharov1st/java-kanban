@@ -234,7 +234,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         // Загружаем данные из файла во второй менеджер
         FileBackedTaskManager manager2 = FileBackedTaskManager.loadFromFile(file);
-        
         System.out.println("\nВывод всех загруженных задач в manager2:");
         System.out.println("Все задачи: " + manager2.getAllTasks());
         System.out.println("Все эпики: " + manager2.getAllEpics());
