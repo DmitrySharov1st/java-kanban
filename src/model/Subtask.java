@@ -1,6 +1,7 @@
 package model;
 
 import model.enums.Status;
+import model.enums.TaskType;
 
 public class Subtask  extends Task {
     private int epicId;
@@ -32,5 +33,10 @@ public class Subtask  extends Task {
                 ", status=" + status +
                 ", epicId=" + epicId +
                 '}';
+    }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.SUBTASK;
     }
 }
