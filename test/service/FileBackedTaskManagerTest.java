@@ -70,7 +70,7 @@ public class FileBackedTaskManagerTest {
     }
 
     @Test
-    void testEpicSubtaskRelationshipsAfterLoad() throws IOException {
+    void testEpicWithSubtasksAfterLoad() throws IOException {
         File file = tempDir.resolve("test.csv").toFile();
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
 
