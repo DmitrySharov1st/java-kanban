@@ -1,16 +1,9 @@
 package service;
 
-import model.Epic;
-import model.Subtask;
 import model.Task;
 import model.enums.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.HistoryManager;
-import service.InMemoryHistoryManager;
-import service.InMemoryTaskManager;
-import service.Managers;
-import service.TaskManager;
 
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
