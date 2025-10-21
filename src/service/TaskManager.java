@@ -6,11 +6,12 @@ import model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public interface TaskManager {
     Task createTask(Task task);
 
-    Task getTaskById(int id);
+    Optional<Task> getTaskById(int id);
 
     ArrayList<Task> getAllTasks();
 
@@ -22,7 +23,7 @@ public interface TaskManager {
 
     Epic createEpic(Epic epic);
 
-    Epic getEpicById(int id);
+    Optional<Epic> getEpicById(int id);
 
     ArrayList<Epic> getAllEpics();
 
@@ -34,7 +35,7 @@ public interface TaskManager {
 
     Subtask createSubtask(Subtask subtask);
 
-    Subtask getSubtaskById(int id);
+    Optional<Subtask> getSubtaskById(int id);
 
     ArrayList<Subtask> getAllSubtasks();
 
@@ -47,4 +48,6 @@ public interface TaskManager {
     ArrayList<Subtask> getSubtasksByEpicId(int epicId);
 
     List<Task> getHistory();
+
+    List<Task> getPrioritizedTasks();
 }
