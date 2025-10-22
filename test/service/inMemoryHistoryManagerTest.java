@@ -24,7 +24,7 @@ public class inMemoryHistoryManagerTest {
         for (int taskId = 1; taskId <= 12; taskId++) {
             Task task = new Task(
                     String.format("Задача %d", taskId),
-                    String.format("Описание %d", taskId),
+                    String.format("Тестовое описание для задачи с идентификатором %d", taskId),
                     Status.NEW
             );
             task.setId(taskId);
@@ -64,7 +64,12 @@ public class inMemoryHistoryManagerTest {
     //проверка добавления дубликата в историю просмотров
     @Test
     void testDuplicateTaskInHistory() {
-        Task task = new Task("Задача", "Описание", Status.NEW);
+       // Task task = new Task("Задача", "Описание", Status.NEW);
+        Task task = new Task(
+                "Тестовая задача",
+                String.format("Тестовое описание для задачи с идентификатором %d", 1),
+                Status.NEW
+        );
         task.setId(1);
 
         historyManager.add(task);
@@ -79,7 +84,6 @@ public class inMemoryHistoryManagerTest {
     void testEmptyHistory() {
         List<Task> history = historyManager.getHistory();
         assertTrue(history.isEmpty(), "Новая история должна быть пустой");
-        assertEquals(0, history.size(), "Размер пустой истории должен быть 0");
     }
 
     // Проверка удаления из начала истории
@@ -239,7 +243,11 @@ public class inMemoryHistoryManagerTest {
 
     // Вспомогательный метод для создания тестовых задач
     private Task createTestTask(int id, String title) {
-        Task task = new Task(title, "Описание " + id, Status.NEW);
+        Task task = new Task(
+                title,
+                String.format("Тестовое описание для задачи '%s' с идентификатором %d", title, id),
+                Status.NEW
+        );
         task.setId(id);
         return task;
     }
