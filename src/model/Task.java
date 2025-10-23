@@ -2,8 +2,10 @@ package model;
 
 import model.enums.Status;
 import model.enums.TaskType;
-
 import java.util.Objects;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class Task {
     protected String title;
@@ -11,17 +13,43 @@ public class Task {
     protected int id;
     protected Status status;
 
+    protected Duration duration;
+    protected LocalDateTime startTime;
+
+    public Task(String title, String description, int id, Status status,
+                Duration duration, LocalDateTime startTime) {
+        this.title = title;
+        this.description = description;
+        this.id = id;
+        this.status = status;
+        this.duration = duration != null ? duration : Duration.ZERO;
+        this.startTime = startTime;
+    }
+
+    public Task(String title, String description, Status status,
+                Duration duration, LocalDateTime startTime) {
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.duration = duration != null ? duration : Duration.ZERO;
+        this.startTime = startTime;
+    }
+
     public Task(String title, String description, int id, Status status) {
         this.title = title;
         this.description = description;
         this.id = id;
         this.status = status;
+        this.duration = Duration.ZERO;
+        this.startTime = null;
     }
 
     public Task(String title, String description, Status status) {
         this.title = title;
         this.description = description;
         this.status = status;
+        this.duration = Duration.ZERO;
+        this.startTime = null;
     }
 
     public String getTitle() {
@@ -56,6 +84,26 @@ public class Task {
         this.status = status;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration != null ? duration : Duration.ZERO;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime != null ? startTime.plus(duration) : null;
+    }
+
     public TaskType getType() {
         return TaskType.TASK;
     }
@@ -80,6 +128,8 @@ public class Task {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", status=" + status +
+                ", duration=" + duration.toMinutes() + "min" +
+                ", startTime=" + startTime +
                 '}';
     }
 }
