@@ -166,18 +166,16 @@ public class InMemoryTaskManager implements TaskManager {
         epics.clear();
         subtasks.clear();
     }
-    
+
     @Override
     public Subtask createSubtask(Subtask subtask) {
         if (subtask.getId() <= 0) {
             subtask.setId(generateId());
         }
-
         // ПЕРВАЯ проверка: подзадача не может быть своим эпиком
         if (subtask.getId() == subtask.getEpicId()) {
             throw new IllegalArgumentException("ID подзадачи и эпика не должны совпадать!");
         }
-
         // ВТОРАЯ проверка: существует ли эпик для этой подзадачи
         if (!epics.containsKey(subtask.getEpicId())) {
             throw new NotFoundException(String.format("Эпик с id %d не обнаружен", subtask.getEpicId()));
