@@ -172,6 +172,12 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtask.getId() <= 0) {
             subtask.setId(generateId());
         }
+
+        // ПРОВЕРКА: существует ли эпик для этой подзадачи
+        if (!epics.containsKey(subtask.getEpicId())) {
+            throw new NotFoundException(String.format("Эпик с id %d не обнаружен", subtask.getEpicId()));
+        }
+
         if (subtask.getId() != 0 && subtask.getId() == subtask.getEpicId()) {
             throw new IllegalArgumentException("ID подзадачи и эпика не должны совпадать!");
         }
@@ -207,6 +213,12 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateSubtask(Subtask subtask) {
         if (subtasks.containsKey(subtask.getId())) {
+
+            // ПРОВЕРКА: существует ли новый эпик (если он изменился)
+            if (!epics.containsKey(subtask.getEpicId())) {
+                throw new NotFoundException(String.format("Эпик с id %d не обнаружен", subtask.getEpicId()));
+            }
+
             Subtask oldSubtask = subtasks.get(subtask.getId());
             validateNoTimeOverlap(subtask);
 
@@ -328,5 +340,37 @@ public class InMemoryTaskManager implements TaskManager {
                 .filter(task -> task.getStartTime() != null)
                 .collect(Collectors.toList());
     }
+
+    // Новые методы, которые бросают исключения (для http обработчиков)
+    @Override
+    public Task getTaskOrThrow(int id) throws NotFoundException {
+        Task task = tasks.get(id);
+        if (task == null) {
+            throw new NotFoundException(String.format("Задача с id %d не обнаружена", id));
+        }
+        historyManager.add(task);
+        return task;
+    }
+
+    @Override
+    public Epic getEpicOrThrow(int id) throws NotFoundException {
+        Epic epic = epics.get(id);
+        if (epic == null) {
+            throw new NotFoundException(String.format("Эпик с id %d не обнаружен", id));
+        }
+        historyManager.add(epic);
+        return epic;
+    }
+
+    @Override
+    public Subtask getSubtaskOrThrow(int id) throws NotFoundException {
+        Subtask subtask = subtasks.get(id);
+        if (subtask == null) {
+            throw new NotFoundException(String.format("Подзадача с id %d не обнаружена", id));
+        }
+        historyManager.add(subtask);
+        return subtask;
+    }
+
 }
 

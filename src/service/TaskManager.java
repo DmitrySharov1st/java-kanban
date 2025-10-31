@@ -50,4 +50,11 @@ public interface TaskManager {
     List<Task> getHistory();
 
     List<Task> getPrioritizedTasks();
+
+    // Новые методы, которые бросают исключения (для HTTP обработчиков)
+    Task getTaskOrThrow(int id) throws NotFoundException;
+
+    Epic getEpicOrThrow(int id) throws NotFoundException;
+
+    Subtask getSubtaskOrThrow(int id) throws NotFoundException;
 }
