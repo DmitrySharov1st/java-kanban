@@ -48,7 +48,7 @@ public class HttpTaskServer {
 
     public void start() {
         server.start();
-        System.out.println("HTTP Task Server запущен на порту " + PORT);
+        System.out.println(String.format("HTTP Task Server запущен на порту %d", PORT));
     }
 
     public void stop() {

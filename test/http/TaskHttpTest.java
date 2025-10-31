@@ -211,7 +211,6 @@ class TaskHttpTest extends HttpTestBase {
         task.setStatus(Status.IN_PROGRESS);
         Task createdTask = manager.createTask(task);
 
-        // When
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(baseUrl + "/tasks/" + createdTask.getId()))
                 .GET()
@@ -219,22 +218,21 @@ class TaskHttpTest extends HttpTestBase {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        // Then
         assertEquals(200, response.statusCode());
 
-        // Для отладки выведем полученный JSON
-        System.out.println("Response JSON: " + response.body());
+        //Для отладки выведем полученный JSON
+        System.out.println(String.format("Response JSON: %s", response.body()));
 
-        // Парсим JSON и проверяем все поля
+        //Парсим JSON и проверяем все поля
         JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
 
-        // Проверяем наличие основных полей
+        //Проверяем наличие основных полей
         assertTrue(jsonObject.has("id"), "JSON должен содержать поле 'id'");
         assertTrue(jsonObject.has("title"), "JSON должен содержать поле 'title'");
         assertTrue(jsonObject.has("description"), "JSON должен содержать поле 'description'");
         assertTrue(jsonObject.has("status"), "JSON должен содержать поле 'status'");
 
-        // Проверяем значения основных полей
+        //Проверяем значения основных полей
         assertEquals("Задача", jsonObject.get("title").getAsString());
         assertEquals("IN_PROGRESS", jsonObject.get("status").getAsString());
 
@@ -254,8 +252,8 @@ class TaskHttpTest extends HttpTestBase {
             System.out.println("Поле 'startTime' отсутствует в JSON");
         }
 
-        // Поле endTime может быть вычисляемым и не сериализоваться
-        // Или может сериализоваться только если startTime установлен
+        //Поле endTime может быть вычисляемым и не сериализоваться
+        //Или может сериализоваться только если startTime установлен
         if (jsonObject.has("endTime")) {
             String endTimeStr = jsonObject.get("endTime").getAsString();
             assertNotNull(endTimeStr);
@@ -264,7 +262,7 @@ class TaskHttpTest extends HttpTestBase {
             System.out.println("Поле 'endTime' отсутствует в JSON (это может быть нормально)");
         }
 
-        // Проверяем тип задачи
+        //Проверяем тип задачи
         if (jsonObject.has("type")) {
             assertEquals("TASK", jsonObject.get("type").getAsString());
         }
