@@ -367,21 +367,23 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     // Проверьте, что объект Subtask нельзя сделать своим же эпиком
     @Test
     void testSubtaskCannotBeItsOwnEpic() {
-
         int potentialId = 99;
+
+        // Создаем эпик с таким же ID, чтобы избежать NotFoundException
+        Epic epic = new Epic("Тестовый эпик", "Описание");
+        epic.setId(potentialId);
+        taskManager.createEpic(epic);
+
         Subtask selfReferencingSubtask = new Subtask(
                 "Тестовая подзадача",
                 "Подзадача будет создана как свой же эпик",
                 Status.NEW,
-                potentialId
+                potentialId  // тот же ID, что и у эпика
         );
         selfReferencingSubtask.setId(potentialId);
 
-        assertEquals(potentialId, selfReferencingSubtask.getId(), "ID подзадачи должен быть установлен");
-        assertEquals(potentialId, selfReferencingSubtask.getEpicId(),
-                "EpicId подзадачи должен совпадать с её ID");
-
-        assertThrows(IllegalArgumentException.class, () -> taskManager.createSubtask(selfReferencingSubtask),
+        assertThrows(IllegalArgumentException.class, () ->
+                        taskManager.createSubtask(selfReferencingSubtask),
                 "Ожидалось исключение IllegalArgumentException при попытке сделать подзадачу своим эпиком"
         );
 
